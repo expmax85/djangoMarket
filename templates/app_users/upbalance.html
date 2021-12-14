@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">{% trans 'Home' %}</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'Account' %}</a></li>
+	<li>{% trans 'Edit' %}</li>
+	<li class="active">{% trans 'Change Balance' %}</li>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row" style="min-height: 300px;">
+			<div class="col-md-7">
+				<!-- Sign Up -->
+				<div class="billing-details">
+					<div class="section-title">
+						<h3 class="title">{% trans 'Change your balance' %}</h3>
+					</div>
+					<div style="margin-bottom: 30px;">
+						<p style="font-size: 18px; line-height: 18px; font-weight: 500;">{% trans 'Now your balance:' %}  <span style="color: red;">{{customer.balance}} RUB</span></p>
+					</div>
+					<form method="post">
+						{% csrf_token %}
+						<div class="form-group">
+							<input class="input" type="number" name="balance" required id="id_balance" placeholder="{% trans 'Enter the amount to add more money' %}">
+						</div>
+
+						<div style="display: flex; justify-content: space-evenly;">
+							<button type="submit" class="primary-btn order-submit">{% trans 'Submit' %}</button>
+
+						</div>
+					</form>
+				</div>
+				<!-- /Sign Up -->
+			</div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+		<!-- /SECTION -->
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">{% trans 'Home' %}</a></li>
+	<li>{% trans 'Login' %}</li>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row" style="min-height: 300px;">
+            <div class="col-md-7">
+                <!-- Sign Up -->
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">{% trans 'Sigh Up' %}</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input class="input" type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" placeholder=" {% trans 'Enter Username' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="password" name="password" autocomplete="current-password" required="" id="id_password" placeholder=" {% trans 'Enter Your Password' %}">
+                        </div>
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <button type="submit" class="primary-btn order-submit">{% trans 'Sigh up' %}</button>
+                            <a href="{% url 'register' %}" class="primary-btn order-submit">{% trans 'Register' %}</a>
+                        </div>
+                    </form>
+                </div>
+                <!-- /Sign Up -->
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

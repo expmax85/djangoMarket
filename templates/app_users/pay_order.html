@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{%block cart_summary %}{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">{% trans 'Home' %}</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'Account' %}</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'Checkout' %}</a></li>
+	<li class="active">{% trans 'Paying' %}</li>
+{% endblock %}
+
+
+{% block wishlist %}{% endblock %}
+{% block product_cart %}{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+			<!-- Order Details -->
+			<div class="col-md-555 order-details" style="max-width: 600px; margin: auto;">
+				<div class="section-title text-center">
+					<h3 class="title">
+					{% if cart %}
+						{% trans 'You have not enouth money to buy all products in cart. Please check and up your balance' %}
+					{% else %}
+						{% trans 'All products was succefully buying!' %}
+					{% endif %}
+					</h3>
+				</div>
+			</div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

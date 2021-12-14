@@ -1,0 +1,81 @@
+{% load custom_tags %}
+{% load i18n %}
+<!-- Section -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="section-title text-center">
+					<h3 class="title">{% trans 'Related Products' %}</h3>
+				</div>
+			</div>
+			<!-- Products tab & slick -->
+			<div class="col-md-12">
+				<div class="row">
+					<div class="products-tabs">
+						<!-- tab -->
+						<div id="tab1" class="tab-pane active">
+							<div class="products-slick" data-nav="#slick-nav-1">
+								<!-- product -->
+								{% for product in related_products %}
+								<div class="product">
+									<div class="product-img">
+										<img src="{{ MEDIA_ROOT }}/media/{{ product.image }}" alt="product_image">
+									</div>
+									<div class="product-body">
+										<p class="product-category">{{ product.category.name }}</p>
+										<h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.title}}</a></h3>
+										<h4 class="product-price">{{ product.price}}</h4>
+										<div class="product-rating">
+											{% for i in 5|times %}
+												{% if i < product.rating %}
+													<i class="fa fa-star"></i>
+												{% else %}
+													<i class="fa fa-star-o empty"></i>
+												{% endif %}
+											{% endfor %}
+										</div>
+										<div class="product-btns">
+											{% if request.user.is_authenticated %}
+											<form class="add-to-wishlist-form" method="get" action="{% url 'add_to_wish' %}">
+												<button class="add-to-wishlist">
+														<input type="hidden" name="id" value="{{ product.id }}">
+													{% if product.id in wishlist %}
+														<i class="heart-custom"></i>
+													{% else %}
+														<i class="heart-o-custom"></i>
+													{% endif %}
+													<span class="tooltipp">{% trans 'add to wishlist' %}</span>
+												</button>
+											</form>
+											{% endif %}
+											<button class="quick-view"><a href="/products/{{ product.category.slug }}/{{product.slug}}"><i class="fa fa-eye"></i></a><span class="tooltipp">{% trans 'quick view' %}</span></button>
+										</div>
+									</div>
+									{% if request.user.is_authenticated %}
+									<div class="add-to-cart">
+										<form method="get" action="{% url 'add_to_cart' %}">
+											<input type="hidden" name="id" value="{{ product.id }}">
+											<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> {% trans 'add to cart' %}</button>
+										</form>
+									</div>
+									{% endif %}
+								</div>
+								{% endfor %}
+								<!-- /product -->
+							</div>
+							<div id="slick-nav-1" class="products-slick-nav"></div>
+						</div>
+						<!-- /tab -->
+					</div>
+				</div>
+			</div>
+			<!-- Products tab & slick -->
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /Section -->

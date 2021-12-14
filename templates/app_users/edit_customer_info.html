@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">{% trans 'Home' %}</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'Account' %}</a></li>
+	<li class="active">{% trans 'Edit' %}</li>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row" style="min-height: 300px;">
+            <div class="col-md-7">
+                <!-- Sign Up -->
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">{% trans 'Edit Customer Info' %}</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input class="input" type="text" name="first_name" maxlength="30" value="{{customer.user.first_name}}" id="id_first_name" placeholder="{% trans 'Your First Name' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="last_name" maxlength="40" value="{{customer.user.last_name}}" id="id_last_name" placeholder="{% trans 'Your Last Name' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="email" name="email" maxlength="50" value="{{customer.user.email}}" id="id_email" placeholder="*{% trans 'Your E-mail' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" name="phone" maxlength="20" required="" value="{{customer.phone}}" id="id_phone" placeholder="*{% trans 'Your Phone Number' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="city" maxlength="40" value="{{customer.city}}" id="id_city" placeholder="{% trans 'Your City Location' %}">
+                        </div>
+
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <button type="submit" class="primary-btn order-submit">{% trans 'Accept changes' %}</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /Sign Up -->
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

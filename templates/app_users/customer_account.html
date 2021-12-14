@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">{% trans 'Home' %}</a></li>
+	<li class="active">{% trans 'Account' %}</li>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row" >
+			<div  style="min-height: 300px; max-width: 600px; margin: auto;">
+				<!-- Sign Up -->
+				<div class="billing-details text-center">
+					<div class="section-title">
+						<h3 class="title">{% trans 'Account info' %}</h3>
+					</div>
+					<div class="d-table">
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'Username:' %}</p>
+							<span class="d-td-2">{{request.user.username}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'First Name:' %}</p>
+							<span class="d-td-2">{{request.user.first_name}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'Last Name:' %}</p>
+							<span class="d-td-2">{{request.user.last_name}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'Phone Number:' %}</p>
+							<span class="d-td-2">{{customer.phone}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'City Location:' %}</p>
+							<span class="d-td-2">{{customer.city}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'Your Status:' %}</p>
+							<span class="d-td-2">{{customer.loyal_group}}</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td">{% trans 'Your Balance:' %}</p>
+							<span class="d-td-2">{{customer.balance}} RUB</span>
+						</div>
+						<div class="form-group d-tr">
+							<p class="d-td"><a href="{% url 'edit_info' %}" class="primary-btn order-submit ">{% trans 'Edit info' %}</a></p>
+							<p class="d-td"><a href="{% url 'upbalance' %}" class="primary-btn order-submit ">{% trans 'Top up your balance' %}</a></p>
+						</div>
+					</div>
+				</div>
+				<!-- /Sign Up -->
+			</div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- SECTION -->
+<div class="section" id="account_cart">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+		<div class="order-details" style="max-width: 600px; margin: auto;">
+				<div class="section-title text-center">
+					<h3 class="title">{% trans 'Your Cart' %}</h3>
+				</div>
+				{% if quantity > 0%}
+				<div class="order-summary">
+
+					<div class="order-col">
+						<div><strong>{% trans 'PRODUCT' %}</strong></div>
+						<div><strong>{% trans 'TOTAL' %}</strong></div>
+					</div>
+					<div class="order-products">
+						{% for item in cart %}
+						<div class="order-col" style="position: relative;">
+							<div class="product-img prt-img-accnt" style="background-image: url('{{ MEDIA_ROOT }}/media/{{ item.product.image }}');"></div>
+							<div><a href="{{ item.product.get_absolute_url }}" style="padding-left: 30px;">{{item.qty}}x {{item.product.title}}</a>
+								<form action="{% url 'delete_from_cart' %}" method="get">
+									<input type="hidden" name="id" value="{{ item.product.id }}">
+									<button class="delete adtnl-del"><i class="fa fa-close"></i></button>
+								</form>
+							</div>
+							<div>{{item.product.price}} RUB</div>
+						</div>
+						{% endfor %}
+					</div>
+					<div class="order-col">
+						<div><strong>{% trans 'TOTAL' %}</strong></div>
+						<div><strong class="order-total">{{subtotal}} RUB</strong></div>
+					</div>
+				</div>
+				<div class="text-center">
+					<a href="{% url 'checkout' %}" class="primary-btn order-submit" style="display: inline; padding: 15px 70px;">{% trans 'Go to order' %}</a>
+				</div>
+				{% else %}
+				<h3 class="title text-center">{% trans 'Your cart is empty' %}</h3>
+				{% endif %}
+			</div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- SECTION -->
+<div class="section" id="account_wishlist">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+
+			<!-- section title -->
+			<div class="col-md-12">
+				<div class="section-title text-center">
+					<h3 class="title">{% trans 'Your wishlist' %}</h3>
+				</div>
+			</div>
+			<!-- /section title -->
+
+			<!-- Products tab & slick -->
+			<div class="col-md-12">
+				<div class="row">
+					{% if products %}
+					<div class="products-tabs">
+						<!-- tab -->
+						<div id="tab1" class="tab-pane active">
+							<div class="products-slick" data-nav="#slick-nav-1">
+								<!-- product -->
+								{% for product in products %}
+								<div class="product">
+									<div class="product-img">
+										<img src="{{ MEDIA_ROOT }}/media/{{ product.image }}" alt="product_image">
+									</div>
+									<div class="product-body">
+										<p class="product-category">{{ product.category.name }}</p>
+										<h3 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.title}}</a></h3>
+										<h4 class="product-price">{{ product.price}}</h4>
+										<div class="product-rating">
+												{% for i in 5|times %}
+													{% if i < product.rating %}
+														<i class="fa fa-star"></i>
+													{% else %}
+														<i class="fa fa-star-o empty"></i>
+													{% endif %}
+												{% endfor %}
+										</div>
+										<div class="product-btns">
+											<form class="add-to-wishlist-form" method="get" action="{% url 'add_to_wish' %}">
+												<button class="add-to-wishlist">
+														<input type="hidden" name="id" value="{{ product.id }}">
+														<i class="heart-custom"></i>
+													<span class="tooltipp">{% trans 'Remove from wishlist' %}</span>
+												</button>
+											</form>
+											<button class="quick-view"><a href="/products/{{ product.category.slug }}/{{product.slug}}"><i class="fa fa-eye"></i></a><span class="tooltipp">{% trans 'quick view' %}</span></button>
+										</div>
+									</div>
+									<div class="add-to-cart">
+										<form method="get" action="{% url 'add_to_cart' %}">
+											<input type="hidden" name="id" value="{{ product.id }}">
+											<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> {% trans 'add to cart' %}</button>
+										</form>
+									</div>
+								</div>
+								<!-- /product -->
+								{% endfor %}
+							</div>
+							<div id="slick-nav-1" class="products-slick-nav"></div>
+						</div>
+						<!-- /tab -->
+						{% else %}
+							<h3 class="title text-center">{% trans 'Your wishlist is empty' %}</h3>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<!-- Products tab & slick -->
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

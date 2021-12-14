@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{%block cart_summary %}{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block breadcrumb %}
+	<li><a href="/">Home</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'Account' %}</a></li>
+	<li><a href="{% url 'account' %}">{% trans 'My Cart' %}</a></li>
+	<li class="active">{% trans 'Checkout' %}</li>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+			<!-- Order Details -->
+			<div class="col-md-555 order-details" style="max-width: 600px; margin: auto;">
+				<div class="section-title text-center">
+					<h3 class="title">{% trans 'Your Order' %}</h3>
+				</div>
+					<div class="order-summary">
+					{% if subtotal %}
+					<form method="get" action="{% url 'pay_order' %}" id="orderform">
+						<div class="order-col">
+							<div style="font-size:20px;"><strong>{% trans 'PRODUCT' %}</strong></div>
+							<div style="font-size:20px;"><strong>{% trans 'TOTAL' %}</strong></div>
+						</div>
+						<div class="order-products">
+							{% for item in cart %}
+							<div class="order-col" style="position: relative;">
+								<div class="order-item">{{item.qty}}x {{item.product.title}}</div>
+								<form action="{% url 'delete_from_cart' %}" method="get" id="deleteform">
+									<input type="hidden" name="id" value="{{ item.product.id }}" form="deleteform">
+									<button class="delete adtnl-del" style="top: 10px;" form="deleteform"><i class="fa fa-close"></i></button>
+								</form>
+								<div class="order-item">{{item.product.price}} RUB</div>
+							</div>
+								{% for storage in item.product.related_storage.all %}
+								{% if storage.qty >= item.qty %}
+								<div class="input-radio">
+									<input type="radio" name="{{item.product.slug}}" id="{{storage.id}}" value="{{storage.id}}~{{item.qty}}" form="orderform">
+									<label for="{{storage.id}}">
+										<span></span>
+										{{storage.shop}}
+									</label>
+									<div class="caption">
+										<p class="checkout-item">{% trans 'IN STOCK:' %}
+											<span>{{storage.qty}} piece(s)</span>
+										</p>
+									</div>
+								</div>
+								{% endif %}
+								{% endfor %}
+							{% endfor %}
+						</div>
+						<div class="order-col">
+							<div>{% trans 'Shiping' %}</div>
+							<div><strong>{% trans 'FREE' %}</strong></div>
+						</div>
+						<div class="order-col">
+							<div style="font-size:20px;"><strong>{% trans 'TOTAL' %}</strong></div>
+							<div><strong class="order-total">{{subtotal}} RUB</strong></div>
+						</div>
+						<div style="display: flex; justify-content:center;">
+						<button onclick="return RadioValidator();" class="primary-btn order-submit order-pay" form="orderform">
+					{% trans 'Pay by order' %}</button></div>
+					</form>
+				</div>
+				{% else %}
+				<h3 class="text-center">{% trans 'There is no products for buy in your cart' %}</h3>
+				{% endif %}
+			</div>
+
+			<script>
+				function RadioValidator()
+				{
+					var ShowAlert = '';
+					var AllFormElements = window.document.getElementById("orderform").elements;
+					for (i = 0; i < AllFormElements.length; i++)
+					{
+						if (AllFormElements[i].type == 'radio')
+						{
+							var ThisRadio = AllFormElements[i].name;
+							var ThisChecked = 'No';
+							var AllRadioOptions = document.getElementsByName(ThisRadio);
+							for (x = 0; x < AllRadioOptions.length; x++)
+							{
+								console.log(x)
+								 if (AllRadioOptions[x].checked && ThisChecked == 'No')
+								 {
+									 ThisChecked = 'Yes';
+									 break;
+								 }
+							}
+							var AlreadySearched = ShowAlert.indexOf(ThisRadio);
+							if (ThisChecked == 'No' && AlreadySearched == -1)
+							{
+							ShowAlert = 'Need to choice the shop for all products';
+							break;
+							}
+						}
+					}
+					if (ShowAlert != '')
+					{
+					alert(ShowAlert);
+					return false;
+					}
+					else
+					{
+					return true;
+					}
+				}
+			</script>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

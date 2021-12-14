@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% load i18n %}
+{% load custom_tags %}
+
+{% block searchbar %}
+		{% get_all_categories %}
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row" style="min-height: 500px; text-align: center;">
+            <h3>{% trans 'See you soon!' %}</h3>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

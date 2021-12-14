@@ -1,0 +1,13 @@
+{% load i18n %}
+<!-- SEARCH BAR -->
+<form action="{% url 'search' %}" method="get">
+    <select name="category_name" class="input-select">
+        <option name="category_name" value="all">{% trans 'All Categories' %}</option>
+        {% for category in categories %}
+        <option name="category_name" value="{{category.slug}}">{{category.name|capfirst}}</option>
+        {% endfor %}
+    </select>
+    <input class="input" name="product_name" placeholder="{% trans 'Search here' %}">
+    <button class="search-btn" type="submit">{% trans 'Search' %}</button>
+</form>
+<!-- /SEARCH BAR -->
